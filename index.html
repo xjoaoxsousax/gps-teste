@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rotas de Ônibus</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap" async defer></script>
+</head>
+<body>
+
+    <div class="container">
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">Sobre</a>
+            <a href="#">Contato</a>
+        </nav>
+
+        <div id="seletor-linha">
+            <label for="linha">Escolha uma linha:</label>
+            <select id="linha">
+                <option value="">Selecione a linha</option>
+                <option value="1001">Linha 1001</option>
+                <option value="1002">Linha 1002</option>
+                <option value="1003">Linha 1003</option>
+            </select>
+            <button id="buscar">Buscar</button>
+        </div>
+
+        <div id="map"></div>
+        <div id="alert" class="alert"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,46 +1,34 @@
-/* Estilo básico do corpo */
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f9;
+/* Resetando margens e paddings */
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
 
-/* Container principal */
-.container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
+/* Estilo básico do body */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+/* Header */
+header {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
     padding: 20px;
 }
 
-/* Estilo para a barra de navegação */
-nav {
-    background-color: #333;
-    padding: 10px;
-    color: white;
-    text-align: center;
-}
-
-/* Links do menu */
-nav a {
-    color: white;
-    text-decoration: none;
-    padding: 10px 15px;
-    display: inline-block;
-    transition: background-color 0.3s;
-}
-
-nav a:hover {
-    background-color: #575757;
+header h1 {
+    font-size: 2em;
 }
 
 /* Seletor de linha */
 #seletor-linha {
-    margin: 20px 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    margin: 20px;
+    text-align: center;
 }
 
 #seletor-linha label {
@@ -49,51 +37,62 @@ nav a:hover {
 }
 
 #seletor-linha select {
-    font-size: 1em;
-    padding: 10px;
-    margin-right: 20px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    font-size: 1.2em;
+    padding: 8px;
     width: 250px;
-}
-
-/* Estilo para o botão de buscar */
-#buscar {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    font-size: 1em;
     border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+    border: 1px solid #ccc;
 }
 
-/* Efeito ao passar o mouse sobre o botão */
-#buscar:hover {
-    background-color: #0056b3;
+/* Informações da linha */
+#informacoes-linha {
+    background-color: #fff;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 800px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Seção do mapa */
-#map {
+#informacoes-linha h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+#informacoes-linha p {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+}
+
+/* Estimativas de chegada */
+#estimativas {
+    background-color: #fff;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 800px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+#estimativas h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+#estimativas ul {
+    list-style-type: none;
+}
+
+#estimativas li {
+    font-size: 1.1em;
+    margin-bottom: 8px;
+}
+
+/* Estilo para o mapa */
+#mapa {
     width: 100%;
     height: 500px;
-    margin-top: 20px;
-}
-
-/* Estilo para mensagens de erro ou sucesso */
-.alert {
-    padding: 15px;
-    margin-top: 20px;
-    border-radius: 5px;
-}
-
-.alert.success {
-    background-color: #4CAF50;
-    color: white;
-}
-
-.alert.error {
-    background-color: #f44336;
-    color: white;
+    margin: 20px auto;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }

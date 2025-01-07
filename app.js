@@ -1,75 +1,68 @@
-// Inicializa o mapa
+let map;
+let marker;
+
 function initMap() {
-    // Define o ponto inicial do mapa (coordenadas de Lisboa)
-    const mapOptions = {
-        center: { lat: 38.7223, lng: -9.1393 },
-        zoom: 12,
-    };
+    // Criando o mapa
+    map = new google.maps.Map(document.getElementById('mapa'), {
+        zoom: 13,
+        center: { lat: 38.726, lng: -9.145 },
+    });
 
-    const map = new google.maps.Map(document.getElementById("map"), mapOptions);
+    // Preencher o seletor com opções de linhas
+    fetchLinhas();
 
-    // Define o comportamento do botão de busca
-    const buscarBtn = document.getElementById('buscar');
-    buscarBtn.addEventListener('click', () => {
-        const linha = document.getElementById('linha').value;
-        if (linha) {
-            getRouteData(linha, map);
-        } else {
-            showAlert('Por favor, selecione uma linha!', 'error');
+    // Detectar mudanças no seletor de linha
+    document.getElementById('linha').addEventListener('change', function () {
+        const linhaId = this.value;
+        if (linhaId) {
+            fetchInformacoesLinha(linhaId);
+            fetchEstimativasChegada(linhaId);
         }
     });
 }
 
-// Função para obter os dados de uma rota (mocked example)
-function getRouteData(linha, map) {
-    // Exemplo de dados mockados para rotas (substitua isso com dados reais)
-    const rotas = {
-        "1001": [
-            { lat: 38.7350, lng: -9.1400 },
-            { lat: 38.7400, lng: -9.1450 },
-            { lat: 38.7450, lng: -9.1500 },
-        ],
-        "1002": [
-            { lat: 38.7300, lng: -9.1350 },
-            { lat: 38.7350, lng: -9.1400 },
-            { lat: 38.7400, lng: -9.1450 },
-        ],
-        "1003": [
-            { lat: 38.7250, lng: -9.1300 },
-            { lat: 38.7300, lng: -9.1350 },
-            { lat: 38.7350, lng: -9.1400 },
-        ]
+function fetchLinhas() {
+    // Aqui você vai buscar as linhas na API (usando um endpoint como /lines)
+    // Exemplo de dados fictícios
+    const linhas = [
+        { id: '1001', nome: 'Linha 1001 - Alfragide a Reboleira' },
+        { id: '1002', nome: 'Linha 1002 - Belém a Cais do Sodré' },
+    ];
+
+    const selectElement = document.getElementById('linha');
+    linhas.forEach(linha => {
+        const option = document.createElement('option');
+        option.value = linha.id;
+        option.textContent = linha.nome;
+        selectElement.appendChild(option);
+    });
+}
+
+function fetchInformacoesLinha(linhaId) {
+    // Aqui você vai buscar as informações da linha na API (usando um endpoint como /lines/:id)
+    // Exemplo de dados fictícios
+    const informacoes = {
+        '1001': 'Informações da linha 1001: Alfragide a Reboleira.',
+        '1002': 'Informações da linha 1002: Belém a Cais do Sodré.',
     };
 
-    const rota = rotas[linha];
-    if (rota) {
-        drawRoute(rota, map);
-        showAlert(`Rota da Linha ${linha} carregada com sucesso!`, 'success');
-    } else {
-        showAlert('Erro ao carregar a rota, tente novamente!', 'error');
-    }
+    document.getElementById('informacoes').textContent = informacoes[linhaId] || 'Informações não disponíveis.';
 }
 
-// Função para desenhar a rota no mapa
-function drawRoute(rota, map) {
-    const routePath = new google.maps.Polyline({
-        path: rota,
-        geodesic: true,
-        strokeColor: "#FF0000",  // Cor da linha
-        strokeOpacity: 1.0,
-        strokeWeight: 2,
+function fetchEstimativasChegada(linhaId) {
+    // Aqui você vai buscar as estimativas de chegada na API (usando um endpoint como /stops/:id/realtime)
+    // Exemplo de dados fictícios
+    const estimativas = [
+        { horario: '08:56', destino: 'Freiria (E.B. 2-3)' },
+        { horario: '09:00', destino: 'Reboleira (Estação)' },
+    ];
+
+    const lista = document.getElementById('estimativas-lista');
+    lista.innerHTML = ''; // Limpar lista existente
+
+    estimativas.forEach(estimativa => {
+        const li = document.createElement('li');
+        li.textContent = `Horário: ${estimativa.horario}, Destino: ${estimativa.destino}`;
+        lista.appendChild(li);
     });
-
-    routePath.setMap(map);
-}
-
-// Função para exibir alertas
-function showAlert(message, type) {
-    const alertBox = document.getElementById('alert');
-    alertBox.textContent = message;
-    alertBox.className = `alert ${type}`;
-    setTimeout(() => {
-        alertBox.textContent = '';
-        alertBox.className = 'alert';
-    }, 3000);
 }

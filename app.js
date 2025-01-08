@@ -1,68 +1,67 @@
 let map;
-let marker;
 
 function initMap() {
-    // Criando o mapa
-    map = new google.maps.Map(document.getElementById('mapa'), {
-        zoom: 13,
-        center: { lat: 38.726, lng: -9.145 },
-    });
+    // Inicializa o mapa centralizado em Lisboa
+    const mapOptions = {
+        center: { lat: 38.7223, lng: -9.1393 }, // Coordenadas de Lisboa
+        zoom: 12,
+    };
+    map = new google.maps.Map(document.getElementById("map"), mapOptions);
 
-    // Preencher o seletor com opções de linhas
-    fetchLinhas();
-
-    // Detectar mudanças no seletor de linha
-    document.getElementById('linha').addEventListener('change', function () {
-        const linhaId = this.value;
-        if (linhaId) {
-            fetchInformacoesLinha(linhaId);
-            fetchEstimativasChegada(linhaId);
+    // Evento de clique no botão Buscar
+    document.getElementById('buscar').addEventListener('click', () => {
+        const linha = document.getElementById('linha').value;
+        if (linha) {
+            getRouteData(linha);
+        } else {
+            showAlert('Por favor, selecione uma linha!', 'error');
         }
     });
 }
 
-function fetchLinhas() {
-    // Aqui você vai buscar as linhas na API (usando um endpoint como /lines)
-    // Exemplo de dados fictícios
-    const linhas = [
-        { id: '1001', nome: 'Linha 1001 - Alfragide a Reboleira' },
-        { id: '1002', nome: 'Linha 1002 - Belém a Cais do Sodré' },
-    ];
+// Função para buscar e desenhar a rota no mapa a partir da API TransitLand
+function getRouteData(linha) {
+    const apiUrl = `https://api.transit.land/api/v1/routes/r-eyck-1726?feedOnestopId=f-carris~metropolitana~pt&feedVersionSha1=bf8201ed7032c6d00ce3fce02700e1dad87aa01c&entityId=1726_0`;
 
-    const selectElement = document.getElementById('linha');
-    linhas.forEach(linha => {
-        const option = document.createElement('option');
-        option.value = linha.id;
-        option.textContent = linha.nome;
-        selectElement.appendChild(option);
-    });
+    fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+            if (data.routes && data.routes.length > 0) {
+                const route = data.routes[0];
+                // Vamos imaginar que você tem uma lista de coordenadas de paradas
+                const coordinates = route.geometry; // Suponha que geometry seja uma lista de coordenadas
+                
+                drawRoute(coordinates);
+                showAlert(`Rota da Linha ${linha} carregada com sucesso!`, 'success');
+            } else {
+                showAlert('Erro ao carregar a rota, tente novamente!', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao buscar dados da API:', error);
+            showAlert('Erro ao carregar a rota, tente novamente!', 'error');
+        });
 }
 
-function fetchInformacoesLinha(linhaId) {
-    // Aqui você vai buscar as informações da linha na API (usando um endpoint como /lines/:id)
-    // Exemplo de dados fictícios
-    const informacoes = {
-        '1001': 'Informações da linha 1001: Alfragide a Reboleira.',
-        '1002': 'Informações da linha 1002: Belém a Cais do Sodré.',
-    };
-
-    document.getElementById('informacoes').textContent = informacoes[linhaId] || 'Informações não disponíveis.';
+// Função para desenhar a linha no mapa
+function drawRoute(rota) {
+    const routePath = new google.maps.Polyline({
+        path: rota,
+        geodesic: true,
+        strokeColor: "#FF0000", // Cor da linha
+        strokeOpacity: 1.0,
+        strokeWeight: 3,
+    });
+    routePath.setMap(map);
 }
 
-function fetchEstimativasChegada(linhaId) {
-    // Aqui você vai buscar as estimativas de chegada na API (usando um endpoint como /stops/:id/realtime)
-    // Exemplo de dados fictícios
-    const estimativas = [
-        { horario: '08:56', destino: 'Freiria (E.B. 2-3)' },
-        { horario: '09:00', destino: 'Reboleira (Estação)' },
-    ];
-
-    const lista = document.getElementById('estimativas-lista');
-    lista.innerHTML = ''; // Limpar lista existente
-
-    estimativas.forEach(estimativa => {
-        const li = document.createElement('li');
-        li.textContent = `Horário: ${estimativa.horario}, Destino: ${estimativa.destino}`;
-        lista.appendChild(li);
-    });
+// Função para mostrar alertas
+function showAlert(message, type) {
+    const alertBox = document.getElementById('alert');
+    alertBox.textContent = message;
+    alertBox.className = `alert ${type}`;
+    setTimeout(() => {
+        alertBox.textContent = '';
+        alertBox.className = 'alert';
+    }, 3000);
 }
